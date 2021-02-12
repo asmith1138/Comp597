@@ -25,7 +25,18 @@ def pred(b0, x, b1):
 
 def calcGradients(B0, B1, x, y):
     b1_gradient = 0
+    b0_gradient = 0
     n = len(y)
+    #need to shuffle the data
+    #'''
+    np.random.shuffle(data)
+    for i in range(n):
+        predictedY = pred(B0, x[i], B1)
+        b0_gradient = predictedY - y[i]
+        b1_gradient = (predictedY - y[i]) * x[i]
+        B0 = B0 - lrate * b0_gradient * 1/n
+        B1 = B1 - lrate * b1_gradient * 1/n
+    '''
     stoNum = np.random.randint(0,n)
     predictedY = pred(B0, x[stoNum], B1)
     b0_gradient = predictedY - y[stoNum]
@@ -33,6 +44,7 @@ def calcGradients(B0, B1, x, y):
     B0 = B0 - lrate * b0_gradient * 1/n
     B1 = B1 - lrate * b1_gradient * 1/n
     #print(f"beta0 = {B0}, beta1 = {B1}")
+    '''
     return [B0,B1]
 
 def calcQ(B0, B1, x, y):
@@ -55,6 +67,8 @@ while iter < epochs:
     B1 = bArr[1]
     oldQ = Q
     Q = calcQ(B0, B1, x, y)
+    #if iter % 50 == 0:
+    #    print(f"beta0 = {B0}, beta1 = {B1}, epochs = {iter}")
     iter += 1
 
 #iter -= 1

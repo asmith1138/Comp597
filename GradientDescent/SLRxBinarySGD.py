@@ -27,18 +27,30 @@ def activate(z):
     return 1 / ( 1 + np.exp((-1 * z)))
 
 def calcGradients(B0, B1, x, y):
+    b0_gradient = 0
     b1_gradient = 0
     n = len(y)
+    #'''
+    np.random.shuffle(data)
+    for i in range(n):
+        predictedZ = pred(B0, x[i], B1)
+        predictedY = activate(predictedZ)
+        b0_gradient = predictedY - y[i]#needs addition stuff ... * predictedY * (1 - predictedY)
+        b1_gradient = (predictedY - y[i]) * x[i]
+        B0 = B0 - lrate * b0_gradient * 1/n
+        B1 = B1 - lrate * b1_gradient * 1/n
+    '''
     stoNum = np.random.randint(0,n)
     predictedZ = pred(B0, x[stoNum], B1)
     #add activation function
     predictedY = activate(predictedZ)
     #print(f"predicted Y: {predictedY}, predicted Z: {predictedZ}")
-    b0_gradient = predictedY - y[stoNum]
+    b0_gradient = predictedY - y[stoNum]#needs addition stuff ... * predictedY * (1 - predictedY)
     b1_gradient = (predictedY - y[stoNum]) * x[stoNum]        
     B0 = B0 - lrate * b0_gradient * 1/n
     B1 = B1 - lrate * b1_gradient * 1/n
     #print(f"beta0 = {B0}, beta1 = {B1}")
+    '''
     return [B0,B1]
 
 def calcQ(B0, B1, x, y):
@@ -61,8 +73,8 @@ while iter < epochs:
     B1 = bArr[1]
     oldQ = Q
     Q = calcQ(B0, B1, x, y)
-    #if iter % 50 == 0:
-    #    print(f"beta0 = {B0}, beta1 = {B1}, epochs = {iter}")
+    if iter % 50 == 0:
+        print(f"beta0 = {B0}, beta1 = {B1}, epochs = {iter}")
     iter += 1
 
 #iter -= 1

@@ -1,8 +1,6 @@
 import sys
 import math
 import numpy as np
-#simple gradient descent
-#over j(b) = 1/2(b^2) + 7sin(b) + 8
 
 if len(sys.argv) < 4:
     print("Please pass in file as argument, with Y in the first column and x in 2nd columns delimited by commas. ")
@@ -27,24 +25,14 @@ def calcGradients(B0, B1, x, y):
     b1_gradient = 0
     b0_gradient = 0
     n = len(y)
-    #need to shuffle the data
-    #'''
     np.random.shuffle(data)
     for i in range(n):
         predictedY = pred(B0, x[i], B1)
         b0_gradient = predictedY - y[i]
         b1_gradient = (predictedY - y[i]) * x[i]
-        B0 = B0 - lrate * b0_gradient * 1/n
-        B1 = B1 - lrate * b1_gradient * 1/n
-    '''
-    stoNum = np.random.randint(0,n)
-    predictedY = pred(B0, x[stoNum], B1)
-    b0_gradient = predictedY - y[stoNum]
-    b1_gradient = (predictedY - y[stoNum]) * x[stoNum]        
-    B0 = B0 - lrate * b0_gradient * 1/n
-    B1 = B1 - lrate * b1_gradient * 1/n
-    #print(f"beta0 = {B0}, beta1 = {B1}")
-    '''
+        B0 = B0 - lrate * b0_gradient 
+        B1 = B1 - lrate * b1_gradient 
+
     return [B0,B1]
 
 def calcQ(B0, B1, x, y):
@@ -67,12 +55,8 @@ while iter < epochs:
     B1 = bArr[1]
     oldQ = Q
     Q = calcQ(B0, B1, x, y)
-    #if iter % 50 == 0:
+    #if iter % 100 == 0:
     #    print(f"beta0 = {B0}, beta1 = {B1}, epochs = {iter}")
     iter += 1
-
-#iter -= 1
-#B0 = oldB0
-#B1 = oldB1
 
 print(f"beta0 = {B0}, beta1 = {B1}, epochs = {iter}")

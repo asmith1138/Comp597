@@ -10,35 +10,20 @@ if len(sys.argv) < 3:
 bOrig = float(sys.argv[1])
 lRate = float(sys.argv[2])
 
-jbOrig = (0.5 * (bOrig ** 2)) + (7 * math.sin(bOrig)) + 8
-jb = jbOrig
-jbPrev = jbOrig
-b = bOrig
+cost = bOrig + (7 * math.cos(bOrig)) 
+b = bOrig - (lRate * (cost))
 bPrev = bOrig
-n = 0
+iter = 0
 
-while jb <= jbPrev:
-    jbPrev=jb
+while b != bPrev:
+    cost = b + (7 * math.cos(bOrig))
     bPrev = b
-    b = b + lRate
+    b = bPrev - (lRate * cost)
     jb = (0.5 * (b ** 2)) + (7 * math.sin(b)) + 8
-    n = n + 1
-    #print(f"b={b},jb={jb},n={n}")
+    if iter % 100 == 0:
+        print(f"beta = {b}, J(beta) = {jb}, epochs = {iter}")
+    iter = iter + 1
+    
+jb = (0.5 * (b ** 2)) + (7 * math.sin(b)) + 8
 
-if n == 1:
-    jb = jbPrev
-    b = bPrev
-    n = n - 1
-    while jb <= jbPrev:
-        jbPrev=jb
-        bPrev = b
-        b = b - lRate
-        jb = (0.5 * (b ** 2)) + (7 * math.sin(b)) + 8
-        n = n + 1
-        #print(f"b={b},jb={jb},n={n}")
-
-jb = jbPrev
-b = bPrev
-n = n - 1
-
-print(f"beta = {b}, J(beta) = {jb}, epochs = {n}")
+print(f"beta = {b}, J(beta) = {jb}, epochs = {iter}")

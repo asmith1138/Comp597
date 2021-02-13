@@ -20,8 +20,8 @@ while b != bPrev:
     bPrev = b
     b = bPrev - (lRate * cost)
     jb = (0.5 * (b ** 2)) + (7 * math.sin(b)) + 8
-    if iter % 100 == 0:
-        print(f"beta = {b}, J(beta) = {jb}, epochs = {iter}")
+    #if iter % 100 == 0:
+    #    print(f"beta = {b}, J(beta) = {jb}, epochs = {iter}")
     iter = iter + 1
     
 jb = (0.5 * (b ** 2)) + (7 * math.sin(b)) + 8

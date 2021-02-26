@@ -22,8 +22,8 @@ from nltk.corpus import stopwords
 from nltk import PorterStemmer
 
 #global trainData
-trainData = np.array([[0,"This movie was bad"]])
-testData = np.array([[0,"This movie was bad"]])
+#trainData = np.array([[0,"This movie was bad"]])
+#testData = np.array([[0,"This movie was bad"]])
 #these took too long, so i loaded them into csvs
 def buildData(trainData, testData):    
     for root, dirs, files in os.walk("aclImdb"):
@@ -133,9 +133,9 @@ def buildDataSmall(trainData, testData):
 
 #trainData, testData = buildDataSmall(trainData, testData)
 #trainData, testData = buildData(trainData, testData)
-trainData = pd.read_csv('aclimdb\\train.csv').values
+trainData = pd.read_csv('train.csv').values
 #trainData = np.genfromtxt('aclimdb\\train.csv',delimiter=',')
-testData = pd.read_csv('aclimdb\\test.csv').values
+testData = pd.read_csv('test.csv').values
 #testData = np.genfromtxt('aclimdb\\test.csv',delimiter=',')
 #print(trainData)
 #data_pd = pd.DataFrame(trainData)

@@ -134,9 +134,9 @@ def buildDataSmall(trainData, testData):
 
 #trainData, testData = buildDataSmall(trainData, testData)
 #trainData, testData = buildData(trainData, testData)
-trainData = pd.read_csv('aclimdb\\train.csv').values
+trainData = pd.read_csv('train.csv').values
 #trainData = np.genfromtxt('aclimdb\\train.csv',delimiter=',')
-testData = pd.read_csv('aclimdb\\test.csv').values
+testData = pd.read_csv('test.csv').values
 #testData = np.genfromtxt('aclimdb\\test.csv',delimiter=',')
 #print(trainData)
 #np.savetxt("train.csv", trainData, delimiter=",")

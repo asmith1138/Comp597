@@ -21,13 +21,9 @@ from nltk import word_tokenize
 from nltk.corpus import stopwords
 from nltk import PorterStemmer
 from gensim.models.word2vec import Word2Vec
+from gensim.sklearn_api.w2vmodel import W2VTransformer
 
 
-
-#Using Word2Vec what?
-with open("glove.6B.50d.txt", "rb") as lines:
-    w2v = {line.split()[0]: np.array(map(float, line.split()[1:]))
-           for line in lines}
 
 #training_sentences = DataPrep.train_news['Statement']
 
@@ -65,15 +61,15 @@ charfilter = re.compile('[a-zA-Z]+')
 
 stopWords = stopwords.words('english')
 
-def SimpleTokenizer(text):
-    words = map(lambda word: word.lower(), word_tokenize(text))
-    words = [word for word in words if word not in stopWords]
-    tokens = (list(map(lambda token: PorterStemmer().stem(token), words)))
-    ntokens = list(filter(lambda token: charfilter.match(token),tokens))
-    return ntokens
+# def SimpleTokenizer(text):
+#     words = map(lambda word: word.lower(), word_tokenize(text))
+#     words = [word for word in words if word not in stopWords]
+#     tokens = (list(map(lambda token: PorterStemmer().stem(token), words)))
+#     ntokens = list(filter(lambda token: charfilter.match(token),tokens))
+#     return ntokens
 
 print("building pipeline...")
-pipeline = Pipeline([('vec', TfidfVectorizer(tokenizer=SimpleTokenizer)),('log_reg',LogisticRegression())])
+pipeline = Pipeline([('vec', W2VTransformer()),('log_reg',LogisticRegression())])
 print("fitting...")
 y = trainData[:,0]
 x = trainData[:,1]

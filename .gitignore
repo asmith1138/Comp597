@@ -55,3 +55,6 @@ aclImdb/train/
 aclImdb/imdb.vocab
 aclImdb/imdbEr.txt
 aclImdb/README
+data/
+glove.6B/
+*.bin

@@ -1,0 +1,26 @@
+Group Members : Ved Patel, Andrew Smith
+Emails : vmp5265, azs7014
+
+The Data files
+1. data (directory, IMDB moview review data - preprocessed)
+2. glove.6B (glove trained vector models)
+3. test_corpus.bin (This are corpus created using the same programs. It takes lot of time so use the pre trained corpus)
+4. train_corpus.bin (This are corpus created using the same programs. It takes lot of time so use the pre trained corpus)
+
+
+How to Run:
+1. Extract the folder
+    i) tar -xvjf COMP597-Assignment5-Ved-Andrew.tar.bz2
+    ii) cd COMP597-Assignment5-Ved-Andrew
+
+2. To run word2vec : w2v.py
+    - To use the pre trained model by ourself which we stored in the file use the following command.
+        python3 w2v.py --w2v_trained --corpus
+    - To train everything from scratch
+        python3 w2v.py
+
+3. To run GloVe : glove.py
+    - To use the pre trained model by ourself which we stored in the file use the following command.
+        python3 glove.py --corpus
+    - To train everything from scratch
+        python3 glove.py

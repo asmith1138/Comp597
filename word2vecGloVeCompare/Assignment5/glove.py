@@ -68,10 +68,10 @@ def prepare_corpus(train, data_type):
         corpus.append(words)
 
     if data_type == "train":
-        with open(TRAIN_CORPUS_FILE, "w") as f:
+        with open(TRAIN_CORPUS_FILE, "w", encoding='utf-8') as f:
             json.dump(corpus, f)
     elif data_type == "test":
-        with open(TEST_CORPUS_FILE, "w") as f:
+        with open(TEST_CORPUS_FILE, "w", encoding='utf-8') as f:
             json.dump(corpus, f)
 
     print("========= CORPUS CREATED =========")
@@ -83,7 +83,7 @@ def load_glove_model_file(filename):
     print("========= LOADING GLOVE PRETRAINED MODEL =========")
     # Load glove file here
     model = {}
-    with open(GLOVE_MODEL_FILE, "r") as f:
+    with open(GLOVE_MODEL_FILE, "r", encoding='utf-8') as f:
         for line in f:
             vals = line.split()
             model[vals[0]] = np.asarray(vals[1:], dtype="float32")
@@ -162,10 +162,10 @@ if __name__ == "__main__":
 
     train_corpus = test_corpus = None
     if args.corpus:
-        with open(TRAIN_CORPUS_FILE, "r") as f:
+        with open(TRAIN_CORPUS_FILE, "r", encoding='utf-8') as f:
             train_corpus = json.load(f)
 
-        with open(TEST_CORPUS_FILE, "r") as f:
+        with open(TEST_CORPUS_FILE, "r", encoding='utf-8') as f:
             test_corpus = json.load(f)
 
     else:

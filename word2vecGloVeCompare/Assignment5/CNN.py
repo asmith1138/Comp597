@@ -20,9 +20,10 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 
 import keras
+from keras.layers.embeddings import Embedding
 from keras.models import Sequential,Input,Model
-from keras.layers import Dense, Dropout, Flatten
-from keras.layers import Conv2D, MaxPooling2D
+from keras.layers import Dense, Dropout, Flatten, LSTM
+from keras.layers import Conv2D, MaxPooling2D, Conv1D, MaxPooling1D
 from keras.layers.normalization import BatchNormalization
 from keras.layers.advanced_activations import LeakyReLU
 
@@ -47,9 +48,9 @@ DOWNSAMPLING = 1E-3
 WIN_SZ = 10
 N_WRKS = 4
 
-batch_size = 64
-epochs = 20
-num_classes = 10
+batch_size = 32
+epochs = 5
+num_classes = 2
 
 def load_data():
     if os.path.isdir(UNSUP_DIR):
@@ -195,39 +196,58 @@ if __name__ == "__main__":
         test_corpus = prepare_corpus(data["test"], "test")
 
 
-
+    #print(train_corpus)
     corpus_model = load_glove_model_file(GLOVE_MODEL_FILE)
 
     train_vec, test_vec = get_vectorized_data(train_corpus, test_corpus, corpus_model)
+    train_y = data["train"]["target"][:N_ITEMS]
+    test_y = data["test"]["target"][:N_ITEMS]
+    print('Training data shape : ', train_vec.shape, data["train"]["target"][:N_ITEMS].shape)
 
+    print('Testing data shape : ', test_vec.shape, data["test"]["target"][:N_ITEMS].shape)
     #exec_logistic_regression(train_vec, test_vec, data)
     #exec_cnn(train_vec, test_vec, data)
     #exec_deep_neural_net(train_vec, test_vec, data)
 
-
 model = Sequential()
-model.add(Conv2D(32, kernel_size=(3, 3),activation='linear',input_shape=(28,28,1),padding='same'))
-model.add(LeakyReLU(alpha=0.1))
-model.add(MaxPooling2D((2, 2),padding='same'))
-model.add(Conv2D(64, (3, 3), activation='linear',padding='same'))
-model.add(LeakyReLU(alpha=0.1))
-model.add(MaxPooling2D(pool_size=(2, 2),padding='same'))
-model.add(Conv2D(128, (3, 3), activation='linear',padding='same'))
-model.add(LeakyReLU(alpha=0.1))                  
-model.add(MaxPooling2D(pool_size=(2, 2),padding='same'))
-model.add(Flatten())
-model.add(Dense(128, activation='linear'))
-model.add(LeakyReLU(alpha=0.1))                  
-model.add(Dense(num_classes, activation='softmax'))
+#model.add(Conv1D(filters=32, kernel_size=2, padding='same', activation='relu'))
+#model.add(Conv2D(32, kernel_size=(3, 3),activation='linear',input_shape=(28,28,1),padding='same'))
+#model.add(LeakyReLU(alpha=0.1))
+#model.add(MaxPooling1D(pool_size=2))
+#model.add(MaxPooling2D((2, 2),padding='same'))
+#model.add(Conv1D(filters=32, kernel_size=2, padding='same', activation='relu'))
+#model.add(Conv2D(64, (3, 3), activation='linear',padding='same'))
+#model.add(LeakyReLU(alpha=0.1))
+#model.add(MaxPooling1D(pool_size=2))
+#model.add(MaxPooling2D(pool_size=(2, 2),padding='same'))
+#model.add(Conv1D(filters=32, kernel_size=2, padding='same', activation='relu'))
+#model.add(Conv2D(128, (3, 3), activation='linear',padding='same'))
+#model.add(LeakyReLU(alpha=0.1))       
+#model.add(MaxPooling1D(pool_size=2))           
+#model.add(MaxPooling2D(pool_size=(2, 2),padding='same'))
+#model.add(Flatten())
+#model.add(Dense(128, activation='linear'))
+#model.add(LeakyReLU(alpha=0.1))                  
+#model.add(Dense(num_classes, activation='softmax'))
 
-model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(),metrics=['accuracy'])
+#model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(),metrics=['accuracy'])
 
-model.summary()
+#model.summary()
 
-train = model.fit(train_vec, data["train"]["target"][:N_ITEMS], batch_size=batch_size,epochs=epochs,verbose=1,validation_data=(test_vec, data["test"]["target"][:N_ITEMS]))
+model.add(Embedding(19479, 32, input_length=300))
+model.add(Conv1D(filters=32, kernel_size=3, padding='same', activation='relu'))
+model.add(MaxPooling1D(pool_size=2))
+# 1 layer of 100 units in the hidden layers of the LSTM cells
+model.add(LSTM(100))
+model.add(Dense(1, activation='softmax'))
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+print(model.summary())
+train = model.fit(train_vec, train_y,validation_split=0.20, epochs=5,verbose=1, batch_size=32)
+
+#train = model.fit(train_vec, data["train"]["target"][:N_ITEMS], batch_size=batch_size,epochs=epochs,verbose=1,validation_data=(test_vec, data["test"]["target"][:N_ITEMS]))
 
 
-test_eval = model.evaluate(test_vec, data["test"]["target"][:N_ITEMS], verbose=0)
+test_eval = model.evaluate(test_vec, test_y, verbose=0)
 
 print('Test loss:', test_eval[0])
 print('Test accuracy:', test_eval[1])

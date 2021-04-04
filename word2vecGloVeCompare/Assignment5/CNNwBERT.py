@@ -226,6 +226,14 @@ def build_classifier_model():
   encoder_inputs = preprocessing_layer(text_input)
   encoder = hub.KerasLayer(tfhub_handle_encoder, trainable=True, name='BERT_encoder')
   outputs = encoder(encoder_inputs)
+  model = tf.keras.models.Sequential()
+  model.add(Embedding(19479, 32, input_length=128, dropout=0.2))
+  model.add(Conv1D(filters=32, kernel_size=3, padding='same', activation='relu'))
+  model.add(MaxPooling1D(pool_size=2))
+  # 1 layer of 100 units in the hidden layers of the LSTM cells
+  model.add(LSTM(100))
+  model.add(Dense(5, activation='softmax'))
+  
   net = outputs['pooled_output']
   net = tf.keras.layers.Conv1D(filters=32, kernel_size=3, padding='same', activation='relu')(net)
   net = tf.keras.layers.MaxPooling1D(pool_size=2)(net)
